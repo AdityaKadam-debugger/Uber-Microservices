@@ -3,10 +3,10 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const CaptainModel = require('../models/Captain.model');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-
 const SESSION_COOKIE = 'session_token';
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
+const { subscribeToQueue } = require('../service/rabbit')
 
 if (!JWT_SECRET) {
     throw new Error('JWT_SECRET must be configured in the environment');
@@ -188,6 +188,9 @@ async function toggleAvailabilty(req, res, next){
     }
 }
 
+    subscribeToQueue("new-ride",(data) => {
+        console.log(JSON.parse(data));
+    })
 module.exports = {
     registerCaptain,
     loginCaptain,

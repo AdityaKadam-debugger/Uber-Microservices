@@ -1,7 +1,9 @@
 const express = require('express');
 const app = express();
 const captainRoutes = require('./routes/Captain.routes');
-app.use(express.json());
+const rabbitMq = require('./service/rabbit')
+rabbitMq.connect()
+
 
 
 app.use(express.json())

@@ -1,5 +1,5 @@
 const rideModel = require("../models/ride.model")
-
+const{ subscribeToQueue, publishToQueue } = require('../service/rabbit')
 module.exports.createRide = async(req,res,next) => {
 
     // Now for creating a ride as per credentials mentioned in the ride model we user, pickup, destination
@@ -13,6 +13,9 @@ module.exports.createRide = async(req,res,next) => {
         pickup,
         destination
     })
+
+    publishToQueue("new-ride",JSON.stringify(newRide))
+    res.send(newRide);
 
     await newRide.save();
 
